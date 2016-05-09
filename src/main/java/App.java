@@ -18,12 +18,6 @@ public class App {
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
-    get("/categories/new", (request, response) -> {
-      Map<String, Object> model = new HashMap<String, Object>();
-      model.put("template", "templates/category-form.vtl");
-      return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine());
-
     post("/categories", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       String name = request.queryParams("name");
@@ -41,7 +35,18 @@ public class App {
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
-    get("/categories/:id", (request, response) -> {
+    post("/category/:id", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      String category_name = request.queryParams("category_name");
+      Category category = Category.find(Integer.parseInt(request.params(":id")));
+      category.update(category_name);
+      model.put("category", category);
+      model.put("allTasks", Task.all());
+      model.put("template", "templates/category.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/category/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Category category = Category.find(Integer.parseInt(request.params(":id")));
       model.put("category", category);
@@ -50,36 +55,14 @@ public class App {
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
-  //   get("categories/:id/tasks/new", (request, response) -> {
-  //     Map<String, Object> model = new HashMap<String, Object>();
-  //     Category category = Category.find(Integer.parseInt(request.params(":id")));
-  //     model.put("category", category);
-  //     model.put("template", "templates/category-tasks-form.vtl");
-  //     return new ModelAndView(model, layout);
-  //   }, new VelocityTemplateEngine());
-  //
-  //   post("/tasks", (request, response) -> {
-  //   Map<String, Object> model = new HashMap<String, Object>();
-  //
-  //   Category category = Category.find(Integer.parseInt(request.queryParams("categoryId")));
-  //
-  //   String description = request.queryParams("description");
-  //
-  //   // *** THIS SECTION UPDATED FOR DB VERSION ***
-  //   Task newTask = new Task(description, category.getId());
-  //   newTask.save();
-  //
-  //   model.put("category", category);
-  //   model.put("template", "templates/category-tasks-success.vtl");
-  //   return new ModelAndView(model, layout);
-  // }, new VelocityTemplateEngine());
+    get("/category/:id/edit", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      Category category = Category.find(Integer.parseInt(request.params(":id")));
+      model.put("category", category);
+      model.put("template", "templates/update-category.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
 
-    // get("tasks/new", (request, response) -> {
-    //   Map<String, Object> model = new HashMap<String, Object>();
-    //   model.put("template", "templates/task-form.vtl");
-    //   return new ModelAndView(model, layout);
-    // }, new VelocityTemplateEngine());
-    //
     get("/tasks", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("tasks", Task.all());
@@ -97,7 +80,7 @@ public class App {
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
-    get("/tasks/:id", (request, response) -> {
+    get("/task/:id", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Task task = Task.find(Integer.parseInt(request.params(":id")));
       model.put("allCategories", Category.all());
@@ -106,23 +89,31 @@ public class App {
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
-    post("/add_tasks", (request, response) -> {
+    get("/task/:id/edit", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      Task task = Task.find(Integer.parseInt(request.params(":id")));
+      model.put("task", task);
+      model.put("template", "templates/update-task.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/add_task", (request, response) -> {
       int taskId = Integer.parseInt(request.queryParams("task_id"));
       int categoryId = Integer.parseInt(request.queryParams("category_id"));
       Category category = Category.find(categoryId);
       Task task = Task.find(taskId);
       category.addTask(task);
-      response.redirect("/categories/" + categoryId);
+      response.redirect("/category/" + categoryId);
       return null;
     });
 
-    post("/add_categories", (request, response) -> {
+    post("/add_category", (request, response) -> {
       int taskId = Integer.parseInt(request.queryParams("task_id"));
       int categoryId = Integer.parseInt(request.queryParams("category_id"));
       Category category = Category.find(categoryId);
       Task task = Task.find(taskId);
       task.addCategory(category);
-      response.redirect("/tasks/" + taskId);
+      response.redirect("/task/" + taskId);
       return null;
     });
   }

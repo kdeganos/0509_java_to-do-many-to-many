@@ -101,4 +101,15 @@ public class Category {
         .executeUpdate();
     }
   }
+
+  public void update(String newName) {
+    this.name = newName;
+    try(Connection con = DB.sql2o.open()) {
+      String updateQuery = "UPDATE categories SET name = :name WHERE id = :id;";
+        con.createQuery(updateQuery)
+          .addParameter("name", newName)
+          .addParameter("id", id)
+          .executeUpdate();
+    }
+  }
 }

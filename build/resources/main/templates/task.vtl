@@ -11,7 +11,7 @@
 
 <h4>Add a category to this task:</h4>
 
-<form action="/add_categories" method="post">
+<form action="/add_category" method="post">
   <input id="task_id" type="hidden" name="task_id" value="$task.getId()">
   <label for="category_id">Select a category</label>
   <select id="category_id" name="category_id" type="text">
@@ -22,5 +22,5 @@
   <button type="submit" class="btn btn-info">Add category to this task</button>
 </form>
 
-<p><a href="/tasks/$task.getId()/edit">Edit this task</a></p><br>
+<p><a href="/task/$task.getId()/edit">Edit this task</a></p><br>
 <p><a href="/">Home</a></p>

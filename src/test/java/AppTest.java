@@ -52,7 +52,7 @@ public class AppTest extends FluentTest {
   public void categoryShowPageDisplaysName() {
     Category testCategory = new Category("Household chores");
     testCategory.save();
-    String url = String.format("http://localhost:4567/categories/%d", testCategory.getId());
+    String url = String.format("http://localhost:4567/category/%d", testCategory.getId());
     goTo(url);
     assertThat(pageSource()).contains("Household chores");
   }
@@ -63,7 +63,7 @@ public class AppTest extends FluentTest {
     testCategory.save();
     Task testTask = new Task("Mow the lawn");
     testTask.save();
-    String url = String.format("http://localhost:4567/categories/%d", testCategory.getId());
+    String url = String.format("http://localhost:4567/category/%d", testCategory.getId());
     goTo(url);
     fillSelect("#task_id").withText("Mow the lawn");
     submit(".btn");
@@ -77,7 +77,7 @@ public class AppTest extends FluentTest {
     testCategory.save();
     Task testTask = new Task("Mow the lawn");
     testTask.save();
-    String url = String.format("http://localhost:4567/tasks/%d", testTask.getId());
+    String url = String.format("http://localhost:4567/task/%d", testTask.getId());
     goTo(url);
     fillSelect("#category_id").withText("Household chores");
     submit(".btn");
@@ -89,8 +89,19 @@ public class AppTest extends FluentTest {
   public void taskShowPageDisplaysDescription() {
     Task testTask = new Task("Mow the lawn");
     testTask.save();
-    String url = String.format("http://localhost:4567/tasks/%d", testTask.getId());
+    String url = String.format("http://localhost:4567/task/%d", testTask.getId());
     goTo(url);
     assertThat(pageSource()).contains("Mow the lawn");
+  }
+
+  @Test
+  public void updateCategory() {
+    Category testCategory = new Category("Household chores");
+    testCategory.save();
+    String url = String.format("http://localhost:4567/category/%d/edit", testCategory.getId());
+    goTo(url);
+    fill("#category_name").with("Errands");
+    submit(".btn");
+    assertThat(pageSource()).contains("Errands");
   }
 }

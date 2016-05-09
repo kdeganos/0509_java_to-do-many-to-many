@@ -61,6 +61,7 @@ public class Task {
   }
 
   public void update(String newDescription) {
+    this.description = newDescription;
     try(Connection con = DB.sql2o.open()) {
       String sql = "UPDATE tasks SET description = :description WHERE id = :id";
       con.createQuery(sql)
