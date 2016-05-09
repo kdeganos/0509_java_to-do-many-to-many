@@ -1,5 +1,12 @@
 <h1>$task.getDescription()</h1>
 
+#if ($task.getCompleted())
+  <p>Complete</p>
+#else
+  <p>Not Complete</p>
+#end
+<br>
+
 #if ($task.getCategories())
   <p>Here are the categories for this task:</p>
   <ul>
@@ -22,5 +29,5 @@
   <button type="submit" class="btn btn-info">Add category to this task</button>
 </form>
 
-<p><a href="/task/$task.getId()/edit">Edit this task</a></p><br>
+<p><a href="/task/$task.getId()/edit">Edit or delete this task</a></p><br>
 <p><a href="/">Home</a></p>

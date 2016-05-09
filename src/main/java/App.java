@@ -89,6 +89,18 @@ public class App {
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
+    post("/update_task/:id", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      int task_id = Integer.parseInt(request.params(":id"));
+      Task task = Task.find(Integer.parseInt(request.params(":id")));
+      String newDescription = request.queryParams("task_description");
+      Boolean completed = Boolean.valueOf(request.queryParams("completed"));
+
+      task.update(newDescription, completed);
+      response.redirect("/task/" + task_id);
+      return null;
+    });
+
     get("/task/:id/edit", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       Task task = Task.find(Integer.parseInt(request.params(":id")));
@@ -116,5 +128,23 @@ public class App {
       response.redirect("/task/" + taskId);
       return null;
     });
+
+    get("/category/:id/delete", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      Category category = Category.find(Integer.parseInt(request.params(":id")));
+      category.delete();
+      model.put("categories", Category.all());
+      model.put("template", "templates/categories.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/task/:id/delete", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      Task task = Task.find(Integer.parseInt(request.params(":id")));
+      task.delete();
+      model.put("tasks", Task.all());
+      model.put("template", "templates/tasks.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
   }
 }

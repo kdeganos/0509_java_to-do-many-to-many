@@ -101,7 +101,38 @@ public class AppTest extends FluentTest {
     String url = String.format("http://localhost:4567/category/%d/edit", testCategory.getId());
     goTo(url);
     fill("#category_name").with("Errands");
-    submit(".btn");
+    submit(".btn", withText("Update Category Name"));
     assertThat(pageSource()).contains("Errands");
+  }
+
+  @Test
+  public void updateTask() {
+    Task testTask = new Task("Mow the lawn");
+    testTask.save();
+    String url = String.format("http://localhost:4567/task/%d/edit", testTask.getId());
+    goTo(url);
+    fill("#task_description").with("Cut the grass");
+    submit(".btn", withText("Update Task Description"));
+    assertThat(pageSource()).contains("Cut the grass");
+  }
+
+  @Test
+  public void deleteCategory() {
+    Category testCategory = new Category("Household chores");
+    testCategory.save();
+    String url = String.format("http://localhost:4567/category/%d/edit", testCategory.getId());
+    goTo(url);
+    submit(".btn", withText("Delete Category"));
+    assertThat(pageSource()).doesNotContain("Household chores");
+  }
+
+  @Test
+  public void deleteTask() {
+    Task testTask = new Task("Mow the lawn");
+    testTask.save();
+    String url = String.format("http://localhost:4567/task/%d/edit", testTask.getId());
+    goTo(url);
+    submit(".btn", withText("Delete Task"));
+    assertThat(pageSource()).doesNotContain("Mow the lawn");
   }
 }

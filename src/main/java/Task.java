@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Task {
   private int id;
   private String description;
+  private Boolean completed = true;
 
   public Task(String description){
     this.description = description;
@@ -17,6 +18,10 @@ public class Task {
 
   public int getId() {
     return id;
+  }
+
+  public Boolean getCompleted() {
+    return completed;
   }
 
   public static List<Task> all() {
@@ -39,12 +44,10 @@ public class Task {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO tasks (description) VALUES (:description)";
-      // con.createQuery(sql)
-      //   .addParameter("description", this.description)
-      //   .executeUpdate();
+      String sql = "INSERT INTO tasks (description, completed) VALUES (:description, :completed)";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("description", this.description)
+        .addParameter("completed", this.completed)
         .executeUpdate()
         .getKey();
     }
@@ -60,12 +63,14 @@ public class Task {
     }
   }
 
-  public void update(String newDescription) {
+  public void update(String newDescription, Boolean completed) {
     this.description = newDescription;
+    this.completed = completed;
     try(Connection con = DB.sql2o.open()) {
-      String sql = "UPDATE tasks SET description = :description WHERE id = :id";
+      String sql = "UPDATE tasks SET description = :description, completed = :completed WHERE id = :id";
       con.createQuery(sql)
         .addParameter("description", newDescription)
+        .addParameter("completed", completed)
         .addParameter("id", this.id)
         .executeUpdate();
     }

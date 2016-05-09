@@ -1,9 +1,13 @@
-<h1>Update Category</h1>
+<h1>Update or Delete Category</h1>
 
 <form action="/category/$category.getId()" method="post">
   <label for="category_name">Category Name</label>
   <input id="category_name" name="category_name" value="$category.getName()" type="text">
   <button type="submit" class="btn btn-info">Update Category Name</button>
+</form>
+
+<form action="/category/$category.getId()/delete" method="get">
+  <button type="submit" class="btn btn-danger">Delete Category</button>
 </form>
 
 <p><a href="/">Home</a></p>

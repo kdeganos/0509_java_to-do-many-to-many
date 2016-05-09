@@ -1,9 +1,19 @@
-<h1>Update Task Description</h1>
+<h1>Update or Delete Task</h1>
 
-<form action="task/$task.getId()" method="post">
+<form action="/update_task/$task.getId()" method="post">
   <label for="task_description">Task Description</label>
-  <input type="submit" class="btn btn-info" value="$task.getDescription()" type="text">
-  <button type="submit">Update Task Description</button>
+  <input id="task_description" name="task_description" value="$task.getDescription()" type="text">
+
+  <select id="completed" name="completed" type="text">
+    <option value="true"> Completed </option>
+    <option value="false"> Not Completed </option>
+  </select>
+
+    <button type="submit">Update Task</button>
+  </form>
+
+<form action="task/$task.getId()/delete" method="get">
+  <button type="submit" class="btn btn-danger">Delete Task</button>
 </form>
 
 <p><a href="/">Home</a></p>

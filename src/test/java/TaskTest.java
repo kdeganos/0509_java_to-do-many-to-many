@@ -60,7 +60,7 @@ public class TaskTest {
   public void update_updatesTaskDescription_true() {
     Task myTask = new Task("Mow the lawn");
     myTask.save();
-    myTask.update("Take a nap");
+    myTask.update("Take a nap", false);
     assertEquals("Take a nap", Task.find(myTask.getId()).getDescription());
   }
 
