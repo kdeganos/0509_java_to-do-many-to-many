@@ -2,25 +2,12 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import java.time.LocalDateTime;
 import org.sql2o.*;
+import java.util.List;
 
 public class TaskTest {
 
   @Rule
   public DatabaseRule database = new DatabaseRule();
- //  @Before
- //  public void setUp() {
- //    DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/to_do_test", null, null);
- //  }
- //
- //  @After
- // public void tearDown() {
- //   try(Connection con = DB.sql2o.open()) {
- //     String deleteTasksQuery = "DELETE FROM tasks *;";
- //     String deleteCategoriesQuery = "DELETE FROM categories *;";
- //     con.createQuery(deleteTasksQuery).executeUpdate();
- //     con.createQuery(deleteCategoriesQuery).executeUpdate();
- //   }
- // }
 
  @Test
  public void Task_instantiatesCorrectly_true(){
@@ -84,5 +71,27 @@ public class TaskTest {
     int myTaskId = myTask.getId();
     myTask.delete();
     assertEquals(null, Task.find(myTaskId));
+  }
+
+  @Test
+  public void addCategory_addsCategoryToTask() {
+    Category myCategory = new Category("Household chores");
+    myCategory.save();
+    Task myTask = new Task("Mow the lawn");
+    myTask.save();
+    myTask.addCategory(myCategory);
+    Category savedCategory = myTask.getCategories().get(0);
+    assertTrue(myCategory.equals(savedCategory));
+  }
+
+  @Test
+  public void getCategories_returnsAllCategories_List() {
+    Category myCategory = new Category("Household chores");
+    myCategory.save();
+    Task myTask = new Task("Mow the lawn");
+    myTask.save();
+    myTask.addCategory(myCategory);
+    List savedCategories = myTask.getCategories();
+    assertEquals(1, savedCategories.size());
   }
 }
